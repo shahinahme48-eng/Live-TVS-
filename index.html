@@ -3,37 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRICFy TV PRO - Mega Edition</title>
+    <title>CRICFy TV PRO - Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        :root { --neon-green: #00ff00; --bg-dark: #0a0a0a; --card-bg: #161b22; }
-        body { background: var(--bg-dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 20px; }
-        .header { background: #111; padding: 15px; text-align: center; border-bottom: 2px solid var(--neon-green); position: sticky; top: 0; z-index: 100; }
-        #video-container { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 55px; z-index: 99; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        :root {
+            --neon-green: #00ff6a;
+            --bg-dark: #050505;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body { 
+            background: var(--bg-dark); 
+            color: #ffffff; 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .header { 
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 15px; 
+            text-align: center; 
+            border-bottom: 2px solid var(--neon-green); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+        .header h2 { margin: 0; font-size: 22px; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
+
+        #video-container { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: #000; 
+            position: sticky; 
+            top: 58px; 
+            z-index: 999; 
+            display: none; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
         video { width: 100%; height: 100%; }
-        .search-box { padding: 15px; }
-        input { width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; color: white; border: 1px solid #333; outline: none; box-sizing: border-box; font-size: 16px; }
-        .tabs { display: flex; gap: 10px; overflow-x: auto; padding: 0 15px 15px; scrollbar-width: none; -ms-overflow-style: none; }
+
+        .search-container { padding: 15px; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 12px; 
+            background: var(--card-bg); 
+            color: white; 
+            border: 1px solid var(--glass-border); 
+            outline: none; 
+            box-sizing: border-box; 
+            font-size: 15px;
+        }
+
+        .tabs { 
+            display: flex; 
+            gap: 10px; 
+            overflow-x: auto; 
+            padding: 0 15px 15px; 
+            scrollbar-width: none;
+        }
         .tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { padding: 10px 20px; border-radius: 25px; border: 1px solid var(--neon-green); background: transparent; color: var(--neon-green); cursor: pointer; white-space: nowrap; font-weight: bold; font-size: 14px; transition: 0.3s; }
-        .tab-btn.active { background: var(--neon-green); color: black; }
-        .grid { padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 12px; }
-        .card { display: flex; align-items: center; background: var(--card-bg); padding: 12px; border-radius: 12px; cursor: pointer; border-left: 5px solid var(--neon-green); border-bottom: 1px solid #333; transition: transform 0.2s; }
-        .card:active { transform: scale(0.98); }
-        .card img { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; object-fit: cover; background: #000; }
+        .tab-btn { 
+            padding: 10px 20px; 
+            border-radius: 30px; 
+            border: 1px solid var(--glass-border); 
+            background: var(--card-bg); 
+            color: #ccc; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-size: 13px; 
+            transition: 0.3s;
+        }
+        .tab-btn.active { 
+            background: var(--neon-green); 
+            color: #000; 
+            font-weight: bold;
+        }
+
+        .grid { 
+            padding: 0 15px; 
+            display: grid; 
+            gap: 12px; 
+        }
+        .card { 
+            display: flex; 
+            align-items: center; 
+            background: var(--card-bg); 
+            padding: 12px; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            border: 1px solid var(--glass-border); 
+            transition: 0.2s;
+        }
+        .card:active { transform: scale(0.97); }
+
+        .card img { 
+            width: 55px; 
+            height: 55px; 
+            border-radius: 10px; 
+            margin-right: 15px; 
+            object-fit: cover; 
+            background: #111;
+        }
         .info { flex: 1; }
-        .info h3 { margin: 4px 0; font-size: 15px; color: #f0f6fc; }
-        .info p { font-size: 11px; color: var(--neon-green); margin: 0; text-transform: uppercase; font-weight: bold; }
-        .live { font-size: 11px; color: #ff4d4d; font-weight: bold; }
-        .loader { text-align: center; padding: 40px; color: var(--neon-green); font-size: 18px; font-weight: bold; }
+        .info h3 { margin: 0; font-size: 15px; color: #fff; }
+        .info p { font-size: 10px; color: var(--neon-green); margin: 2px 0; text-transform: uppercase; font-weight: bold; }
+        .live-text { font-size: 11px; color: #ff4d4d; font-weight: bold; }
+
+        .loader { text-align: center; padding: 40px; color: var(--neon-green); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="header"><h2 style="margin:0; color:var(--neon-green); letter-spacing: 1px;">CRICFy TV PRO</h2></div>
+<div class="header"><h2>CRICFy TV PRO</h2></div>
 <div id="video-container"><video id="video" controls autoPlay playsinline></video></div>
 
-<div class="search-box"><input type="text" id="searchInput" placeholder="Search (Sony, Star, T-Sports, BD...)" onkeyup="filter()"></div>
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filter()">
+</div>
 
 <div class="tabs">
     <button class="tab-btn active" onclick="filterTab('All', this)">All</button>
@@ -43,75 +134,65 @@
     <button class="tab-btn" onclick="filterTab('Global', this)">Global</button>
 </div>
 
-<div id="loader" class="loader">Loading 1500+ Channels...</div>
+<div id="loader" class="loader">Loading Channels...</div>
 <div class="grid" id="channelList"></div>
 
 <script>
-    // ৪টি শক্তিশালী সোর্স এক জায়গায়
+    // ৪টি প্রধান সোর্স
     const sources = [
-        "https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u", // ইন্ডিয়ান ও প্রিমিয়াম স্পোর্টস
-        "https://raw.githubusercontent.com/ar-rony/smartiptv-playlist/master/MYIPTVLIST.m3u", // বাংলাদেশী ও স্পোর্টস
-        "https://raw.githubusercontent.com/Shadmanislam/bdiptv/master/BD%20IPTV.m3u", // বিডি সোর্স
-        "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8" // গ্লোবাল সোর্স
+        "https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u",
+        "https://raw.githubusercontent.com/ar-rony/smartiptv-playlist/master/MYIPTVLIST.m3u",
+        "https://raw.githubusercontent.com/Shadmanislam/bdiptv/master/BD%20IPTV.m3u",
+        "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8"
     ];
 
     let allChannels = [];
+    const defaultLogo = "https://cdn-icons-png.flaticon.com/128/1044/1044302.png"; // লোগো না থাকলে এটি দেখাবে
 
-    async function loadAllSources() {
+    async function init() {
         for (let url of sources) {
             try {
-                const response = await fetch(url);
-                const data = await response.text();
-                parseM3U(data);
-            } catch (error) {
-                console.log("Error loading:", url);
-            }
+                const res = await fetch(url);
+                const data = await res.text();
+                parse(data);
+            } catch (e) { console.log("Error loading source"); }
         }
         document.getElementById('loader').style.display = 'none';
         display(allChannels);
     }
 
-    function parseM3U(data) {
+    function parse(data) {
         const lines = data.split('\n');
         for (let i = 0; i < lines.length; i++) {
             if (lines[i].startsWith('#EXTINF')) {
                 const info = lines[i];
-                const streamUrl = lines[i + 1]?.trim();
-                if (!streamUrl || !streamUrl.startsWith('http')) continue;
+                const url = lines[i + 1]?.trim();
+                if (!url || !url.startsWith('http')) continue;
 
-                const name = info.split(',')[1]?.trim() || "Unknown Channel";
+                const name = info.split(',')[1]?.trim() || "Live TV";
                 const logoMatch = info.match(/tvg-logo="([^"]+)"/);
-                const logo = logoMatch ? logoMatch[1] : "https://cdn-icons-png.flaticon.com/128/1044/1044302.png";
+                const logo = logoMatch ? logoMatch[1] : defaultLogo;
                 
-                // অটোমেটিক স্মার্ট ক্যাটাগরি ফিল্টার
                 let group = "Global";
-                const gMatch = info.match(/group-title="([^"]+)"/i);
-                const groupTitle = gMatch ? gMatch[1].toLowerCase() : "";
-                const lowerName = name.toLowerCase();
+                const lowName = name.toLowerCase();
+                if (lowName.includes("bd") || lowName.includes("bangla")) group = "Bangladesh";
+                else if (lowName.includes("sony") || lowName.includes("star") || lowName.includes("sports") || lowName.includes("ten")) group = "Sports";
+                else if (lowName.includes("india") || lowName.includes("hindi")) group = "India";
 
-                if (groupTitle.includes("bangla") || lowerName.includes("bd") || lowerName.includes("bangla")) group = "Bangladesh";
-                else if (groupTitle.includes("india") || lowerName.includes("hindi") || lowerName.includes("sony") || lowerName.includes("star")) group = "India";
-                
-                // স্পোর্টস ক্যাটাগরি সব দেশের স্পোর্টসকে এক করবে
-                if (groupTitle.includes("sports") || lowerName.includes("sports") || lowerName.includes("cricket") || lowerName.includes("ten")) {
-                    group = "Sports";
-                }
-
-                allChannels.push({ name, url: streamUrl, logo, group });
+                allChannels.push({ name, url, logo, group });
             }
         }
     }
 
     function display(list) {
         const container = document.getElementById('channelList');
-        // পারফরম্যান্সের জন্য প্রথমে শুধু ২০০টি দেখাবে, স্ক্রল করলে বাকিগুলো আসবে
-        container.innerHTML = list.slice(0, 500).map(ch => `
+        container.innerHTML = list.slice(0, 300).map(ch => `
             <div class="card" onclick="play('${ch.url}')">
-                <img src="${ch.logo}" onerror="this.src='https://cdn-icons-png.flaticon.com/128/1044/1044302.png'">
+                <img src="${ch.logo}" onerror="this.src='${defaultLogo}'">
                 <div class="info">
                     <p>${ch.group}</p>
                     <h3>${ch.name}</h3>
-                    <span class="live">● LIVE NOW</span>
+                    <span class="live-text">● LIVE NOW</span>
                 </div>
             </div>
         `).join('');
@@ -119,19 +200,12 @@
 
     function play(url) {
         const v = document.getElementById('video');
-        const container = document.getElementById('video-container');
-        container.style.display = 'block';
+        document.getElementById('video-container').style.display = 'block';
         window.scrollTo({top: 0, behavior: 'smooth'});
-
         if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(url);
-            hls.attachMedia(v);
+            const hls = new Hls(); hls.loadSource(url); hls.attachMedia(v);
             hls.on(Hls.Events.MANIFEST_PARSED, () => v.play());
-        } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
-            v.src = url;
-            v.play();
-        }
+        } else { v.src = url; v.play(); }
     }
 
     function filter() {
@@ -142,11 +216,10 @@
     function filterTab(tab, btn) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        if (tab === 'All') display(allChannels);
-        else display(allChannels.filter(c => c.group === tab));
+        display(tab === 'All' ? allChannels : allChannels.filter(c => c.group === tab));
     }
 
-    loadAllSources();
+    init();
 </script>
 </body>
 </html>
