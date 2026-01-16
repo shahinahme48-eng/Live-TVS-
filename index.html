@@ -3,61 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CRICFy TV PRO - Ultimate 2026</title>
+    <title>CRICFy TV PRO 2026 - Ultimate Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root { --neon: #00ff6a; --bg: #050505; --card: #121212; --border: rgba(255, 255, 255, 0.1); }
         body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
 
+        /* স্প্ল্যাশ স্ক্রিন */
         #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.8s; }
         .logo-anim { font-size: 35px; color: var(--neon); font-weight: 800; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 1; } }
 
         .header { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); padding: 15px; border-bottom: 2px solid var(--neon); position: sticky; top: 0; z-index: 1000; text-align: center; }
-        .header h2 { margin: 0; font-size: 20px; font-weight: 800; color: var(--neon); }
+        .header h2 { margin: 0; font-size: 20px; font-weight: 800; color: var(--neon); letter-spacing: 1px; }
 
         #video-container { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 58px; z-index: 999; display: none; border-bottom: 2px solid var(--neon); }
         video { width: 100%; height: 100%; }
 
+        /* সেকশন কন্ট্রোল */
         .section { display: none; padding: 15px; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .search-area { padding-bottom: 15px; }
-        input { width: 100%; padding: 14px; border-radius: 12px; background: var(--card); color: white; border: 1px solid var(--border); outline: none; box-sizing: border-box; }
-
-        .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
-        .tab-btn { padding: 10px 22px; border-radius: 30px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; }
-        .tab-btn.active { background: var(--neon); color: #000; }
-
+        /* চ্যানেল কার্ড ডিজাইন */
         .grid { display: grid; gap: 12px; }
         .card { display: flex; align-items: center; background: var(--card); padding: 12px; border-radius: 18px; cursor: pointer; border: 1px solid var(--border); position: relative; }
         .card img { width: 55px; height: 55px; border-radius: 12px; margin-right: 15px; object-fit: cover; background: #111; }
         .info h3 { margin: 0; font-size: 14px; width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fff; }
         .info p { font-size: 10px; color: var(--neon); margin: 2px 0; text-transform: uppercase; font-weight: 700; }
-
-        /* লাভ/ফেভারিট আইকন */
         .fav-btn { position: absolute; right: 15px; font-size: 25px; color: #333; transition: 0.3s; }
         .fav-btn.active { color: #ff4d4d; }
 
-        /* রিয়েল স্কোরবোর্ড */
-        .score-box { width: 100%; height: 550px; border-radius: 20px; overflow: hidden; background: #fff; border: 2px solid var(--neon); }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* স্কোরবোর্ড ডিজাইন (No Login Needed) */
+        .score-card { background: linear-gradient(145deg, #1a1a1a, #0d0d0d); border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); border-left: 5px solid var(--neon); }
+        .m-type { font-size: 10px; color: var(--neon); font-weight: bold; margin-bottom: 8px; opacity: 0.8; }
+        .m-teams { display: flex; justify-content: space-between; font-weight: 600; font-size: 15px; margin: 5px 0; }
+        .m-score { color: var(--neon); font-weight: 800; }
+        .m-status { font-size: 11px; color: #ff4d4d; margin-top: 10px; font-weight: bold; border-top: 1px solid #222; padding-top: 8px; }
 
+        /* সার্চ ও ট্যাব */
+        input { width: 100%; padding: 14px; border-radius: 12px; background: var(--card); color: white; border: 1px solid var(--border); outline: none; box-sizing: border-box; margin-bottom: 15px; }
+        .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
+        .tab-btn { padding: 10px 22px; border-radius: 30px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; }
+        .tab-btn.active { background: var(--neon); color: #000; }
+
+        /* বটম নেভিগেশন */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 1001; }
         .nav-item { text-align: center; color: #666; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: var(--neon); }
         .nav-item i { font-size: 24px; display: block; margin-bottom: 2px; font-style: normal; }
 
-        #load-msg { text-align: center; color: var(--neon); font-size: 14px; padding: 20px; }
+        #load-msg { text-align: center; color: var(--neon); padding: 20px; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div id="splash">
     <div class="logo-anim">CRICFy PRO</div>
-    <p style="color:#888; font-size:12px; margin-top:10px;">UNLIMITED STREAMS • 2026</p>
+    <p style="color:#888; font-size:12px; margin-top:10px;">GLOBAL TV & REAL-TIME SCORES</p>
 </div>
 
 <div class="header"><h2>CRICFy TV PRO</h2></div>
@@ -65,23 +69,26 @@
 
 <!-- হোম সেকশন -->
 <div id="home-sec" class="section active">
-    <div class="search-area"><input type="text" id="searchInput" placeholder="Search 30,000+ Channels..." onkeyup="filter()"></div>
+    <div class="search-area"><input type="text" id="searchInput" placeholder="Search Unlimited Channels..." onkeyup="filter()"></div>
     <div class="tabs">
         <button class="tab-btn active" onclick="filterTab('All', this)">All</button>
-        <button class="tab-btn" onclick="filterTab('Bangladesh', this)">🇧🇩 Bangladesh</button>
+        <button class="tab-btn" onclick="filterTab('Bangladesh', this)">🇧🇩 BD</button>
         <button class="tab-btn" onclick="filterTab('India', this)">🇮🇳 India</button>
         <button class="tab-btn" onclick="filterTab('Sports', this)">🏏 Sports</button>
     </div>
-    <div id="load-msg">Fetching Unlimited Channels...</div>
+    <div id="load-msg">Loading Unlimited Channels...</div>
     <div class="grid" id="channelList"></div>
 </div>
 
-<!-- লাইভ স্কোর সেকশন -->
+<!-- স্কোর সেকশন (Fixed) -->
 <div id="score-sec" class="section">
-    <h3 style="text-align:center; color:var(--neon); font-size:16px; margin-bottom:15px;">🏏 Real-Time Live Scores ⚽</h3>
-    <div class="score-box">
-        <!-- এখানে এমন একটি লিঙ্ক দেওয়া হয়েছে যা অ্যান্ড্রয়েড অ্যাপে ব্লক হবে না -->
-        <iframe src="https://www.cricketbuzz.com/cricket-match/live-scores"></iframe>
+    <h3 style="text-align:center; color:var(--neon); font-size:16px;">🏏 Live Match Center ⚽</h3>
+    <div id="real-scores">
+        <p style="text-align:center; color:#888; padding:50px;">Fetching Live 2026 Sports Data...</p>
+    </div>
+    <div style="margin-top:20px; border-radius:15px; overflow:hidden;">
+        <!-- ফুটবলের জন্য গ্লোবাল সচল লিঙ্ক -->
+        <iframe src="https://www.scorebat.com/embed/livescore/" style="width:100%; height:400px; border:none;"></iframe>
     </div>
 </div>
 
@@ -99,17 +106,39 @@
 </div>
 
 <script>
-    // ৪টি মেগা সোর্স সহ iptv-org মেইন সোর্স
+    // মেইন সোর্স + iptv-org আনলিমিটেড
     const sources = [
         "https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u",
         "https://raw.githubusercontent.com/ar-rony/smartiptv-playlist/master/MYIPTVLIST.m3u",
         "https://raw.githubusercontent.com/Shadmanislam/bdiptv/master/BD%20IPTV.m3u",
-        "https://iptv-org.github.io/iptv/index.m3u" // ৩০ হাজার চ্যানেল সোর্স
+        "https://iptv-org.github.io/iptv/index.m3u" 
     ];
 
     let allChannels = [];
-    let favorites = JSON.parse(localStorage.getItem('CRICFY_FAVS_2026')) || [];
+    let favorites = JSON.parse(localStorage.getItem('CRICFY_FAV_PRO')) || [];
     const defaultLogo = "https://cdn-icons-png.flaticon.com/128/1044/1044302.png";
+
+    // ১. রিয়েল লাইভ স্কোর ফেচ করা
+    async function fetchScores() {
+        const container = document.getElementById('real-scores');
+        try {
+            const res = await fetch('https://cricket-api-ruddy.vercel.app/'); 
+            const matches = await res.json();
+            if(matches && matches.length > 0) {
+                container.innerHTML = matches.map(m => `
+                    <div class="score-card">
+                        <div class="m-type">ICC / BPL 2026 LIVE</div>
+                        <div class="m-teams"><span>${m.title}</span><span class="m-score">${m.score || 'Upcoming'}</span></div>
+                        <div class="m-status">● ${m.update || 'Enjoy Live Streaming'}</div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div class="score-card"><div class="m-status" style="color:#888; text-align:center;">No ICC or BPL matches currently live.</div></div>';
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="score-card"><div class="m-status" style="color:#888; text-align:center;">Live scores are temporarily unavailable.</div></div>';
+        }
+    }
 
     async function init() {
         for (let url of sources) {
@@ -117,9 +146,8 @@
                 const res = await fetch(url);
                 const data = await res.text();
                 parseM3U(data);
-                // প্রতি সোর্স লোড হওয়ার পর গ্রিড আপডেট হবে যাতে ইউজারকে বেশিক্ষণ বসতে না হয়
                 display(allChannels);
-            } catch (e) { console.log("Source load failed"); }
+            } catch (e) { }
         }
         document.getElementById('splash').style.display = 'none';
         document.getElementById('load-msg').style.display = 'none';
@@ -129,27 +157,24 @@
         const lines = data.split('\n');
         for (let i = 0; i < lines.length; i++) {
             if (lines[i].startsWith('#EXTINF')) {
-                const streamUrl = lines[i + 1]?.trim();
-                if (!streamUrl || !streamUrl.startsWith('http')) continue;
-
-                const name = lines[i].split(',')[1]?.trim() || "Unknown";
+                const url = lines[i + 1]?.trim();
+                if (!url || !url.startsWith('http')) continue;
+                const name = lines[i].split(',')[1]?.trim() || "Live TV";
                 const logo = lines[i].match(/tvg-logo="([^"]+)"/)?.[1] || defaultLogo;
-                
                 let group = "Global";
-                const lower = name.toLowerCase();
-                if (lower.includes("bd") || lower.includes("bangla")) group = "Bangladesh";
-                else if (lower.includes("sony") || lower.includes("star") || lower.includes("sports") || lower.includes("ten") || lower.includes("cricket")) group = "Sports";
-                else if (lower.includes("india") || lower.includes("hindi")) group = "India";
-
-                allChannels.push({ name, url: streamUrl, logo, group });
+                const low = name.toLowerCase();
+                if (low.includes("bd") || low.includes("bangla")) group = "Bangladesh";
+                else if (low.includes("sony") || low.includes("star") || low.includes("sports") || low.includes("ten") || low.includes("cricket")) group = "Sports";
+                else if (low.includes("india") || low.includes("hindi")) group = "India";
+                allChannels.push({ name, url, logo, group });
             }
         }
     }
 
     function display(list, target = 'channelList') {
         const container = document.getElementById(target);
-        // পারফরম্যান্সের জন্য গ্লোবাল লিস্ট থেকে প্রথম ৪০০টি দেখাবে
-        container.innerHTML = list.slice(0, 400).map(ch => {
+        // পারফরম্যান্সের জন্য প্রথমে ৫০০টি দেখাবে
+        container.innerHTML = list.slice(0, 500).map(ch => {
             const isFav = favorites.some(f => f.url === ch.url) ? 'active' : '';
             return `
                 <div class="card" onclick="play('${ch.url}')">
@@ -164,20 +189,18 @@
         }).join('');
     }
 
-    function toggleFav(e, channel) {
+    function toggleFav(e, ch) {
         e.stopPropagation();
-        const index = favorites.findIndex(f => f.url === channel.url);
+        const index = favorites.findIndex(f => f.url === ch.url);
         if (index > -1) {
             favorites.splice(index, 1);
             e.target.classList.remove('active');
         } else {
-            favorites.push(channel);
+            favorites.push(ch);
             e.target.classList.add('active');
         }
-        localStorage.setItem('CRICFY_FAVS_2026', JSON.stringify(favorites));
-        if(document.getElementById('fav-sec').classList.contains('active')) {
-            display(favorites, 'favList');
-        }
+        localStorage.setItem('CRICFY_FAV_PRO', JSON.stringify(favorites));
+        if(document.getElementById('fav-sec').classList.contains('active')) display(favorites, 'favList');
     }
 
     function switchSec(id, el) {
@@ -186,6 +209,7 @@
         document.getElementById(id + '-sec').classList.add('active');
         el.classList.add('active');
         document.getElementById('video-container').style.display = 'none';
+        if(id === 'score') fetchScores();
         if(id === 'fav') display(favorites, 'favList');
     }
 
@@ -201,8 +225,7 @@
 
     function filter() {
         const q = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allChannels.filter(c => c.name.toLowerCase().includes(q));
-        display(filtered);
+        display(allChannels.filter(c => c.name.toLowerCase().includes(q)));
     }
 
     function filterTab(tab, btn) {
