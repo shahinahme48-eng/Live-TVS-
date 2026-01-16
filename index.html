@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CRICFy TV PRO 2026 - Real Scores Fix</title>
+    <title>CRICFy TV PRO 2026 - Master Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -29,24 +29,31 @@
         /* চ্যানেল কার্ড */
         .grid { display: grid; gap: 12px; }
         .card { display: flex; align-items: center; background: var(--card); padding: 12px; border-radius: 18px; cursor: pointer; border: 1px solid var(--border); position: relative; }
+        .card:active { transform: scale(0.96); }
         .card img { width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; object-fit: cover; background: #111; }
         .info h3 { margin: 0; font-size: 14px; width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .info p { font-size: 10px; color: var(--neon); margin: 2px 0; text-transform: uppercase; font-weight: 700; }
-        .fav-btn { position: absolute; right: 15px; font-size: 24px; color: #333; }
+        .fav-btn { position: absolute; right: 15px; font-size: 24px; color: #333; transition: 0.3s; }
         .fav-btn.active { color: #ff4d4d; }
 
-        /* রিয়েল স্কোরবোর্ড ট্যাব */
-        .score-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .score-tab-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; font-size: 12px; font-weight: 600; }
+        /* স্কোরবোর্ড ট্যাব */
+        .score-tabs { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
+        .score-tab-btn { padding: 10px 20px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; font-size: 12px; font-weight: 600; }
         .score-tab-btn.active { background: var(--neon); color: #000; }
 
-        /* আইফ্রেম উইজেট স্টাইল */
-        .widget-container { width: 100%; border-radius: 15px; overflow: hidden; background: #fff; height: 500px; border: 2px solid var(--neon); }
+        /* উইজেট বক্স */
+        .widget-box { width: 100%; height: 550px; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: #fff; }
         iframe { width: 100%; height: 100%; border: none; }
+
+        /* সার্চ ও ট্যাব */
+        input { width: 100%; padding: 14px; border-radius: 12px; background: var(--card); color: white; border: 1px solid var(--border); outline: none; box-sizing: border-box; margin-bottom: 15px; }
+        .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
+        .tab-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; white-space: nowrap; font-size: 13px; }
+        .tab-btn.active { background: var(--neon); color: #000; font-weight: bold; }
 
         /* বটম নেভিগেশন */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 1001; }
-        .nav-item { text-align: center; color: #666; font-size: 11px; cursor: pointer; }
+        .nav-item { text-align: center; color: #666; font-size: 11px; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--neon); }
         .nav-item i { font-size: 24px; display: block; margin-bottom: 2px; font-style: normal; }
     </style>
@@ -55,7 +62,7 @@
 
 <div id="splash">
     <div class="logo-anim">CRICFy PRO</div>
-    <p style="color:#888; font-size:12px; margin-top:10px;">REAL-TIME SPORTS HUB 2026</p>
+    <p style="color:#888; font-size:12px; margin-top:10px;">BPL & ICC 2026 EDITION</p>
 </div>
 
 <div class="header"><h2>CRICFy TV PRO</h2></div>
@@ -63,22 +70,29 @@
 
 <!-- হোম সেকশন -->
 <div id="home-sec" class="section active">
-    <div style="padding-bottom:15px;"><input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filter()" style="width:100%; padding:14px; border-radius:12px; background:var(--card); color:white; border:1px solid var(--border); outline:none; box-sizing:border-box;"></div>
+    <input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filter()">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="filterTab('All', this)">All</button>
+        <button class="tab-btn" onclick="filterTab('Fav', this)">❤️ Fav</button>
+        <button class="tab-btn" onclick="filterTab('Sports', this)">🏏 Sports</button>
+        <button class="tab-btn" onclick="filterTab('Bangladesh', this)">🇧🇩 Bangladesh</button>
+        <button class="tab-btn" onclick="filterTab('India', this)">🇮🇳 India</button>
+    </div>
     <div class="grid" id="channelList"></div>
 </div>
 
-<!-- লাইভ স্কোর সেকশন (ফিক্সড) -->
+<!-- লাইভ স্কোর সেকশন (Fixed) -->
 <div id="score-sec" class="section">
     <div class="score-tabs">
-        <button class="score-tab-btn active" onclick="fetchCricketScores(this)">🏏 Cricket</button>
-        <button class="score-tab-btn" onclick="fetchFootballScores(this)">⚽ Football</button>
+        <button class="score-tab-btn active" onclick="switchScore('cricket')">🏏 Cricket</button>
+        <button class="score-tab-btn" onclick="switchScore('football')">⚽ Football</button>
     </div>
-    <div id="score-content" class="widget-container">
-        <!-- এখানে রিয়েল ক্রিকেট স্কোর লোড হবে -->
+    <div id="score-content" class="widget-box">
+        <iframe id="score-frame" src="https://m.cricbuzz.com/cricket-match/live-scores"></iframe>
     </div>
+    <p style="text-align:center; font-size:11px; color:#555; margin-top:10px;">If score doesn't load, please click Reload below.</p>
 </div>
 
-<!-- ফেভারিট সেকশন -->
 <div id="fav-sec" class="section">
     <h3 style="text-align:center; color:var(--neon);">❤️ Your Favorites</h3>
     <div class="grid" id="favList"></div>
@@ -92,40 +106,29 @@
 </div>
 
 <script>
-    const sources = [
-        "https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u",
-        "https://raw.githubusercontent.com/ar-rony/smartiptv-playlist/master/MYIPTVLIST.m3u",
-        "https://raw.githubusercontent.com/Shadmanislam/bdiptv/master/BD%20IPTV.m3u",
-        "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8"
+    // --- হাতে লেখা মেইন চ্যানেল লিস্ট (যাতে কখনও খালি না দেখায়) ---
+    const localChannels = [
+        { name: "Somoy TV", url: "https://live-cdn.jagobd.com/somoy/somoy.stream/playlist.m3u8", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/SomoyTV.png", group: "Bangladesh" },
+        { name: "Jamuna TV", url: "https://live-cdn.jagobd.com/jamuna/jamuna.stream/playlist.m3u8", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/JamunaTV.png", group: "Bangladesh" },
+        { name: "T-Sports Live", url: "https://raw.githubusercontent.com/shahinahme48-eng/Live-TV/main/tsports.m3u8", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/TSports.png", group: "Sports" },
+        { name: "Star Sports 1 HD", url: "http://103.199.161.254:8000/play/a01h", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/StarSports1.png", group: "Sports" },
+        { name: "Sony Ten 1 HD", url: "http://103.199.161.254:8000/play/a01i", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/SonyTen1.png", group: "Sports" },
+        { name: "Star Sports Select 1", url: "http://103.199.161.254:8000/play/a01j", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/StarSportsSelect1.png", group: "Sports" },
+        { name: "Colors Cineplex", url: "http://103.199.161.254:8000/play/a01k", logo: "https://via.placeholder.com/50", group: "India" },
+        { name: "India Today", url: "https://linear-413.voot.com/cl9/hls/itv/playlist.m3u8", logo: "https://raw.githubusercontent.com/iptv-org/database/master/data/logos/IndiaToday.png", group: "India" }
     ];
 
-    let allChannels = [];
-    let favorites = JSON.parse(localStorage.getItem('my_fav_2026_v4')) || [];
+    const sources = [
+        "https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u",
+        "https://raw.githubusercontent.com/ar-rony/smartiptv-playlist/master/MYIPTVLIST.m3u"
+    ];
+
+    let allChannels = [...localChannels];
+    let favorites = JSON.parse(localStorage.getItem('my_fav_2026_final')) || [];
     const defaultLogo = "https://cdn-icons-png.flaticon.com/128/1044/1044302.png";
 
-    // --- ১. রিয়েল ক্রিকেট স্কোর ফিক্স ---
-    function fetchCricketScores(btn) {
-        updateTabStyles(btn);
-        const container = document.getElementById('score-content');
-        container.style.background = "#fff";
-        // আমরা একটি বিশ্বস্ত ক্রিকেট উইজেট ব্যবহার করছি যা ICC, BPL সব দেখাবে
-        container.innerHTML = `<iframe src="https://m.cricbuzz.com/cricket-match/live-scores"></iframe>`;
-    }
-
-    // --- ২. রিয়েল ফুটবল স্কোর ---
-    function fetchFootballScores(btn) {
-        updateTabStyles(btn);
-        const container = document.getElementById('score-content');
-        container.style.background = "#fff";
-        container.innerHTML = `<iframe src="https://www.scorebat.com/embed/livescore/"></iframe>`;
-    }
-
-    function updateTabStyles(activeBtn) {
-        document.querySelectorAll('.score-tab-btn').forEach(b => b.classList.remove('active'));
-        activeBtn.classList.add('active');
-    }
-
     async function init() {
+        display(allChannels);
         for (let url of sources) {
             try {
                 const res = await fetch(url);
@@ -148,7 +151,8 @@
                 let group = "Global";
                 const low = name.toLowerCase();
                 if (low.includes("bd") || low.includes("bangla")) group = "Bangladesh";
-                else if (low.includes("star") || low.includes("sony") || low.includes("ten") || low.includes("sports") || low.includes("cricket")) group = "Sports";
+                else if (low.includes("sony") || low.includes("star") || low.includes("sports") || low.includes("ten") || low.includes("cricket") || low.includes("football")) group = "Sports";
+                else if (low.includes("india") || low.includes("hindi") || low.includes("zee")) group = "India";
                 allChannels.push({ name, url, logo, group });
             }
         }
@@ -156,7 +160,7 @@
 
     function display(list, target = 'channelList') {
         const container = document.getElementById(target);
-        container.innerHTML = list.slice(0, 300).map(ch => {
+        container.innerHTML = list.slice(0, 500).map(ch => {
             const isFav = favorites.includes(ch.name) ? 'active' : '';
             return `
                 <div class="card" onclick="play('${ch.url}')">
@@ -177,16 +181,27 @@
         document.getElementById(id + '-sec').classList.add('active');
         el.classList.add('active');
         document.getElementById('video-container').style.display = 'none';
-        
-        if(id === 'score') fetchCricketScores(document.querySelectorAll('.score-tab-btn')[0]);
         if(id === 'fav') display(allChannels.filter(c => favorites.includes(c.name)), 'favList');
+    }
+
+    function switchScore(type) {
+        const frame = document.getElementById('score-frame');
+        const btns = document.querySelectorAll('.score-tab-btn');
+        btns.forEach(b => b.classList.remove('active'));
+        if(type === 'cricket') {
+            frame.src = "https://m.cricbuzz.com/cricket-match/live-scores";
+            btns[0].classList.add('active');
+        } else {
+            frame.src = "https://www.scorebat.com/embed/livescore/";
+            btns[1].classList.add('active');
+        }
     }
 
     function toggleFav(e, name) {
         e.stopPropagation();
         if (favorites.includes(name)) favorites = favorites.filter(n => n !== name);
         else favorites.push(name);
-        localStorage.setItem('my_fav_2026_v4', JSON.stringify(favorites));
+        localStorage.setItem('my_fav_2026_final', JSON.stringify(favorites));
         e.target.classList.toggle('active');
     }
 
@@ -203,6 +218,12 @@
     function filter() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         display(allChannels.filter(c => c.name.toLowerCase().includes(q)));
+    }
+
+    function filterTab(tab, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        display(tab === 'All' ? allChannels : allChannels.filter(c => (tab === 'Fav' ? favorites.includes(c.name) : c.group === tab)));
     }
 
     init();
