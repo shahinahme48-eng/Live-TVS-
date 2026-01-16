@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CRICFy TV PRO 2026 - Real-Time Edition</title>
+    <title>CRICFy TV PRO 2026 - Real Scores Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -32,24 +32,17 @@
         .card img { width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; object-fit: cover; background: #111; }
         .info h3 { margin: 0; font-size: 14px; width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .info p { font-size: 10px; color: var(--neon); margin: 2px 0; text-transform: uppercase; font-weight: 700; }
+        .fav-btn { position: absolute; right: 15px; font-size: 24px; color: #333; }
+        .fav-btn.active { color: #ff4d4d; }
 
-        /* রিয়েল স্কোরবোর্ড ডিজাইন */
+        /* রিয়েল স্কোরবোর্ড ট্যাব */
         .score-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
         .score-tab-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; font-size: 12px; font-weight: 600; }
         .score-tab-btn.active { background: var(--neon); color: #000; }
 
-        .score-card { background: linear-gradient(135deg, #1a1a1a, #121212); border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); border-left: 5px solid var(--neon); }
-        .m-title { font-size: 11px; color: var(--neon); font-weight: bold; margin-bottom: 10px; opacity: 0.8; }
-        .m-row { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; }
-        .m-team { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; }
-        .m-score { font-weight: 800; color: #fff; font-size: 15px; }
-        .m-status { font-size: 11px; color: #ff4d4d; margin-top: 10px; font-weight: bold; border-top: 1px solid #222; padding-top: 8px; }
-
-        /* সার্চ ও মেইন ট্যাব */
-        input { width: 100%; padding: 14px; border-radius: 12px; background: var(--card); color: white; border: 1px solid var(--border); outline: none; box-sizing: border-box; margin-bottom: 15px; }
-        .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
-        .tab-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; white-space: nowrap; font-size: 13px; }
-        .tab-btn.active { background: var(--neon); color: #000; font-weight: bold; }
+        /* আইফ্রেম উইজেট স্টাইল */
+        .widget-container { width: 100%; border-radius: 15px; overflow: hidden; background: #fff; height: 500px; border: 2px solid var(--neon); }
+        iframe { width: 100%; height: 100%; border: none; }
 
         /* বটম নেভিগেশন */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 1001; }
@@ -70,24 +63,18 @@
 
 <!-- হোম সেকশন -->
 <div id="home-sec" class="section active">
-    <input type="text" id="searchInput" placeholder="Search Channels (Sony, Star, BPL...)" onkeyup="filter()">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="filterTab('All', this)">All</button>
-        <button class="tab-btn" onclick="filterTab('Bangladesh', this)">🇧🇩 Bangladesh</button>
-        <button class="tab-btn" onclick="filterTab('India', this)">🇮🇳 India</button>
-        <button class="tab-btn" onclick="filterTab('Sports', this)">🏏 Sports</button>
-    </div>
+    <div style="padding-bottom:15px;"><input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filter()" style="width:100%; padding:14px; border-radius:12px; background:var(--card); color:white; border:1px solid var(--border); outline:none; box-sizing:border-box;"></div>
     <div class="grid" id="channelList"></div>
 </div>
 
-<!-- লাইভ স্কোর সেকশন -->
+<!-- লাইভ স্কোর সেকশন (ফিক্সড) -->
 <div id="score-sec" class="section">
     <div class="score-tabs">
-        <button class="score-tab-btn active" onclick="fetchCricketScores()">🏏 Cricket</button>
-        <button class="score-tab-btn" onclick="fetchFootballScores()">⚽ Football</button>
+        <button class="score-tab-btn active" onclick="fetchCricketScores(this)">🏏 Cricket</button>
+        <button class="score-tab-btn" onclick="fetchFootballScores(this)">⚽ Football</button>
     </div>
-    <div id="score-list">
-        <p style="text-align:center; color:#888; padding:50px;">Fetching Live 2026 Data...</p>
+    <div id="score-content" class="widget-container">
+        <!-- এখানে রিয়েল ক্রিকেট স্কোর লোড হবে -->
     </div>
 </div>
 
@@ -97,7 +84,6 @@
     <div class="grid" id="favList"></div>
 </div>
 
-<!-- বটম নেভিগেশন বার -->
 <div class="bottom-nav">
     <div class="nav-item active" onclick="switchSec('home', this)"><i>🏠</i>Home</div>
     <div class="nav-item" onclick="switchSec('score', this)"><i>📊</i>Scores</div>
@@ -114,44 +100,29 @@
     ];
 
     let allChannels = [];
-    let favorites = JSON.parse(localStorage.getItem('my_fav_2026')) || [];
+    let favorites = JSON.parse(localStorage.getItem('my_fav_2026_v4')) || [];
     const defaultLogo = "https://cdn-icons-png.flaticon.com/128/1044/1044302.png";
 
-    // --- ১. রিয়েল ক্রিকেট স্কোর ফেচিং (BPL & ICC) ---
-    async function fetchCricketScores() {
-        const container = document.getElementById('score-list');
-        container.innerHTML = '<p style="text-align:center; color:var(--neon);">Updating Live Cricket scores...</p>';
-        
-        try {
-            // আসল স্পোর্টস এপিআই সোর্স (এটি ২০২৬ সালের রিয়েল ডাটা দেবে)
-            const res = await fetch('https://cricket-api-ruddy.vercel.app/'); 
-            const matches = await res.json();
-            
-            if(matches && matches.length > 0) {
-                container.innerHTML = matches.map(m => `
-                    <div class="score-card">
-                        <div class="m-title">${m.title}</div>
-                        <div class="m-row"><span>🏏 Match Score:</span><span class="m-score">${m.score || 'Starts Soon'}</span></div>
-                        <div class="m-status">● ${m.update || 'Live from Stadium'}</div>
-                    </div>
-                `).join('');
-            } else {
-                container.innerHTML = '<p style="text-align:center;">No ICC or BPL matches live right now.</p>';
-            }
-        } catch (e) {
-            container.innerHTML = '<p style="text-align:center; color:#ff4d4d;">Failed to connect to Score Server.</p>';
-        }
+    // --- ১. রিয়েল ক্রিকেট স্কোর ফিক্স ---
+    function fetchCricketScores(btn) {
+        updateTabStyles(btn);
+        const container = document.getElementById('score-content');
+        container.style.background = "#fff";
+        // আমরা একটি বিশ্বস্ত ক্রিকেট উইজেট ব্যবহার করছি যা ICC, BPL সব দেখাবে
+        container.innerHTML = `<iframe src="https://m.cricbuzz.com/cricket-match/live-scores"></iframe>`;
     }
 
-    // --- ২. রিয়েল ফুটবল স্কোর ফেচিং (Global Leagues) ---
-    function fetchFootballScores() {
-        const container = document.getElementById('score-list');
-        // ফুটবলের জন্য আমরা একটি লাইভ উইজেট লোড করব কারণ ফুটবল ডাটা বড় হয়
-        container.innerHTML = `
-            <iframe src="https://www.scorebat.com/embed/livescore/" 
-                    style="width:100%; height:500px; border:none; border-radius:15px; background:white;"></iframe>
-            <p style="font-size:10px; color:#555; text-align:center; margin-top:5px;">Powered by ScoreBat Live</p>
-        `;
+    // --- ২. রিয়েল ফুটবল স্কোর ---
+    function fetchFootballScores(btn) {
+        updateTabStyles(btn);
+        const container = document.getElementById('score-content');
+        container.style.background = "#fff";
+        container.innerHTML = `<iframe src="https://www.scorebat.com/embed/livescore/"></iframe>`;
+    }
+
+    function updateTabStyles(activeBtn) {
+        document.querySelectorAll('.score-tab-btn').forEach(b => b.classList.remove('active'));
+        activeBtn.classList.add('active');
     }
 
     async function init() {
@@ -178,7 +149,6 @@
                 const low = name.toLowerCase();
                 if (low.includes("bd") || low.includes("bangla")) group = "Bangladesh";
                 else if (low.includes("star") || low.includes("sony") || low.includes("ten") || low.includes("sports") || low.includes("cricket")) group = "Sports";
-                else if (low.includes("india") || low.includes("hindi")) group = "India";
                 allChannels.push({ name, url, logo, group });
             }
         }
@@ -208,10 +178,7 @@
         el.classList.add('active');
         document.getElementById('video-container').style.display = 'none';
         
-        if(id === 'score') {
-            document.querySelectorAll('.score-tab-btn')[0].classList.add('active');
-            fetchCricketScores();
-        }
+        if(id === 'score') fetchCricketScores(document.querySelectorAll('.score-tab-btn')[0]);
         if(id === 'fav') display(allChannels.filter(c => favorites.includes(c.name)), 'favList');
     }
 
@@ -219,7 +186,7 @@
         e.stopPropagation();
         if (favorites.includes(name)) favorites = favorites.filter(n => n !== name);
         else favorites.push(name);
-        localStorage.setItem('my_fav_2026', JSON.stringify(favorites));
+        localStorage.setItem('my_fav_2026_v4', JSON.stringify(favorites));
         e.target.classList.toggle('active');
     }
 
@@ -236,12 +203,6 @@
     function filter() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         display(allChannels.filter(c => c.name.toLowerCase().includes(q)));
-    }
-
-    function filterTab(tab, btn) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        display(tab === 'All' ? allChannels : allChannels.filter(c => c.group === tab));
     }
 
     init();
