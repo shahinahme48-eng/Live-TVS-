@@ -1,60 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Scores 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root { --neon: #00ff6a; --bg: #050505; --card: #121212; --border: rgba(255, 255, 255, 0.1); }
-        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 80px; }
-        .header { background: #111; padding: 15px; border-bottom: 2px solid var(--neon); text-align: center; }
-        .tabs { display: flex; gap: 10px; justify-content: center; padding: 15px; }
-        .tab-btn { padding: 10px 25px; border-radius: 30px; border: 1px solid var(--border); background: var(--card); color: #888; cursor: pointer; font-weight: 600; font-size: 13px; }
-        .tab-btn.active { background: var(--neon); color: #000; }
-        
-        .score-container { padding: 10px; height: 600px; border-radius: 15px; overflow: hidden; background: #fff; margin: 10px; border: 2px solid var(--neon); }
-        iframe { width: 100%; height: 100%; border: none; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Scores 2026</title>
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
-        .nav-item { text-align: center; color: #666; font-size: 11px; text-decoration: none; }
-        .nav-item.active { color: var(--neon); }
-        .nav-item i { font-size: 24px; display: block; font-style: normal; }
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--neon:#00ff6a; --bg:#050505; --card:#121212; --border:rgba(255,255,255,.12);
+}
+body{
+margin:0;background:var(--bg);color:#fff;font-family:Poppins,sans-serif;
+}
+.header{
+background:#111;padding:14px;text-align:center;border-bottom:2px solid var(--neon);
+}
+.tabs{
+display:flex;justify-content:center;gap:12px;padding:12px;
+}
+.tab-btn{
+padding:9px 24px;border-radius:30px;border:1px solid var(--border);
+background:var(--card);color:#888;font-weight:600;font-size:13px;cursor:pointer;
+}
+.tab-btn.active{background:var(--neon);color:#000;}
+
+.score-container{
+margin:10px;border:2px solid var(--neon);
+border-radius:14px;overflow:hidden;background:#fff;
+height:70vh;
+}
+iframe{width:100%;height:100%;border:none;}
+
+.fallback{
+display:none;
+padding:30px;text-align:center;color:#000;font-weight:600;
+}
+
+.bottom-nav{
+position:fixed;bottom:0;width:100%;background:#111;
+display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid var(--border);
+}
+.nav-item{color:#666;text-decoration:none;font-size:11px;text-align:center}
+.nav-item.active{color:var(--neon)}
+.nav-item i{display:block;font-size:22px}
+</style>
 </head>
+
 <body>
-<div class="header"><h2>Live Sports Scores</h2></div>
+
+<div class="header"><h3>Live Sports Scores</h3></div>
 
 <div class="tabs">
-    <button class="tab-btn active" onclick="switchScore('cricket')">🏏 Cricket</button>
-    <button class="tab-btn" onclick="switchScore('football')">⚽ Football</button>
+<button class="tab-btn active" onclick="switchScore('cricket')">🏏 Cricket</button>
+<button class="tab-btn" onclick="switchScore('football')">⚽ Football</button>
 </div>
 
 <div class="score-container">
-    <!-- এখানে এমন একটি ডাইনামিক লিঙ্ক দিচ্ছি যা মোবাইল অ্যাপে ব্লক হবে না এবং সব ম্যাচ দেখাবে -->
-    <iframe id="scoreFrame" src="https://www.cricbuzz.com/cricket-match/live-scores"></iframe>
+<iframe id="scoreFrame" onerror="showFallback()"></iframe>
+
+<div class="fallback" id="fallback">
+⚠️ Live score iframe blocked  
+<br><br>
+<a href="#" onclick="openExternal()" style="color:#0a7cff">Open Live Scores</a>
+</div>
 </div>
 
 <div class="bottom-nav">
-    <a href="index.html" class="nav-item"><i>🏠</i>TV Home</a>
-    <a href="scores.html" class="nav-item active"><i>📊</i>Live Scores</a>
-    <div class="nav-item" onclick="location.reload()"><i>🔄</i>Refresh</div>
+<a href="index.html" class="nav-item"><i>🏠</i>Home</a>
+<a class="nav-item active"><i>📊</i>Scores</a>
+<div class="nav-item" onclick="location.reload()"><i>🔄</i>Refresh</div>
 </div>
 
 <script>
-    function switchScore(type) {
-        const frame = document.getElementById('scoreFrame');
-        const btns = document.querySelectorAll('.tab-btn');
-        if(type === 'cricket') {
-            // ক্রিকবাজ মোবাইল লিঙ্ক যা গ্লোবাল এবং বিডি সব ম্যাচ দেখায়
-            frame.src = "https://www.cricbuzz.com/cricket-match/live-scores";
-            btns[0].classList.add('active'); btns[1].classList.remove('active');
-        } else {
-            // ফুটবলের রিয়েল টাইম রেজাল্ট লিঙ্ক
-            frame.src = "https://www.scorebat.com/embed/livescore/";
-            btns[1].classList.add('active'); btns[0].classList.remove('active');
-        }
-    }
+const frame=document.getElementById("scoreFrame");
+const fallback=document.getElementById("fallback");
+
+function showFallback(){
+frame.style.display="none";
+fallback.style.display="block";
+}
+
+function openExternal(){
+window.open(currentLink,"_blank");
+}
+
+let currentLink="";
+
+function switchScore(type){
+document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+
+if(type==="cricket"){
+currentLink="https://www.cricbuzz.com/cricket-match/live-scores";
+frame.src=currentLink;
+document.querySelectorAll(".tab-btn")[0].classList.add("active");
+}
+else{
+currentLink="https://www.scorebat.com/embed/livescore/";
+frame.src=currentLink;
+document.querySelectorAll(".tab-btn")[1].classList.add("active");
+}
+frame.style.display="block";
+fallback.style.display="none";
+}
+
+switchScore("cricket");
 </script>
+
 </body>
 </html>
